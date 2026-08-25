@@ -4,7 +4,6 @@ use App\Models\Student;
 use App\Models\User;
 use App\Models\Visitor;
 use App\Models\WifiVoucher;
-use App\Services\MockOmadaService;
 use App\Services\VoucherAssignmentService;
 
 it('prevents a student from receiving a second active voucher', function () {
@@ -25,11 +24,12 @@ it('prevents a student from receiving a second active voucher', function () {
         'voucher_type' => 'student',
         'duration_minutes' => 480,
         'status' => 'active',
+        'network_name' => 'CIC-Student',
         'issued_at' => now(),
         'expires_at' => now()->addHours(8),
     ]);
 
-    $service = new VoucherAssignmentService(new MockOmadaService());
+    $service = new VoucherAssignmentService;
 
     $result = $service->issueForStudent($student, 480);
 
@@ -47,7 +47,15 @@ it('issues a new voucher when the student has none active', function () {
         'pin_hash' => bcrypt('4321'),
     ]);
 
-    $service = new VoucherAssignmentService(new MockOmadaService());
+    WifiVoucher::create([
+        'voucher_code' => 'LOCAL-9002',
+        'voucher_type' => 'student',
+        'duration_minutes' => 480,
+        'status' => 'active',
+        'import_batch' => 'test-batch',
+        'imported_at' => now(),
+    ]);
+    $service = new VoucherAssignmentService;
 
     $result = $service->issueForStudent($student, 480);
 
@@ -68,7 +76,17 @@ it('issues a new voucher for a visitor and allows lookup by active voucher', fun
         'status' => 'active',
     ]);
 
-    $service = new VoucherAssignmentService(new MockOmadaService());
+    WifiVoucher::create([
+        'voucher_code' => 'LOCAL-VISITOR',
+        'voucher_type' => 'visitor',
+        'duration_minutes' => 240,
+        'status' => 'active',
+        'network_name' => 'CIC-Visitors',
+        'import_batch' => 'test-batch',
+        'imported_at' => now(),
+    ]);
+
+    $service = new VoucherAssignmentService;
 
     $result = $service->issueForVisitor($visitor, 240);
 
@@ -99,11 +117,12 @@ it('renders a polished student voucher display with the network details', functi
         'expires_at' => now()->addHours(8),
     ]);
 
-    $response = $this->get('/kiosk/student/' . $student->id . '/voucher');
+    $response = $this->withSession(['kiosk_student_id' => $student->id])
+        ->get('/kiosk/student/'.$student->id.'/voucher');
 
     $response->assertOk()
         ->assertSee('WiFi Access Ready')
         ->assertSee('Network Name')
-        ->assertSee('CIC-WiFi')
+        ->assertSee('CIC-Student')
         ->assertSee('Voucher Code');
 });

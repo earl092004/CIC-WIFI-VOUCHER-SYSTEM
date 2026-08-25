@@ -12,44 +12,44 @@ return new class extends Migration
     public function up(): void
     {
         Schema::create('wifi_vouchers', function (Blueprint $table) {
-    $table->id();
+            $table->id();
 
-    // The student or visitor who received the voucher
-    $table->foreignId('student_id')
-        ->nullable()
-        ->constrained('students')
-        ->nullOnDelete();
+            // The student or visitor who received the voucher
+            $table->foreignId('student_id')
+                ->nullable()
+                ->constrained('students')
+                ->nullOnDelete();
 
-    $table->foreignId('visitor_id')
-        ->nullable()
-        ->constrained('visitors')
-        ->nullOnDelete();
+            $table->foreignId('visitor_id')
+                ->nullable()
+                ->constrained('visitors')
+                ->nullOnDelete();
 
-    // Information returned by Omada
-    $table->string('omada_voucher_id')->nullable();
-    $table->string('voucher_code')->unique();
+            // Information returned by Omada
+            $table->string('omada_voucher_id')->nullable();
+            $table->string('voucher_code')->unique();
 
-    // Who issued the voucher
-    $table->foreignId('issued_by')
-        ->nullable()
-        ->constrained('users')
-        ->nullOnDelete();
+            // Who issued the voucher
+            $table->foreignId('issued_by')
+                ->nullable()
+                ->constrained('users')
+                ->nullOnDelete();
 
-    $table->enum('voucher_type', ['student', 'visitor']);
+            $table->enum('voucher_type', ['student', 'visitor']);
 
-    $table->unsignedInteger('duration_minutes');
+            $table->unsignedInteger('duration_minutes');
 
-    $table->enum('status', [
-        'active',
-        'expired',
-        'revoked'
-    ])->default('active');
+            $table->enum('status', [
+                'active',
+                'expired',
+                'revoked',
+            ])->default('active');
 
-    $table->timestamp('issued_at')->nullable();
-    $table->timestamp('expires_at')->nullable();
+            $table->timestamp('issued_at')->nullable();
+            $table->timestamp('expires_at')->nullable();
 
-    $table->timestamps();
-});
+            $table->timestamps();
+        });
     }
 
     /**

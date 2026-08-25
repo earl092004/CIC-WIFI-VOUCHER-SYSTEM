@@ -39,7 +39,7 @@
                         Network Name
                     </p>
                     <p class="mt-2 text-2xl font-bold text-slate-900">
-                        CIC-WiFi
+                        {{ $voucher->network_name ?? config('wifi.networks.visitor') }}
                     </p>
                 </div>
 

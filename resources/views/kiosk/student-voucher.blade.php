@@ -33,6 +33,12 @@
                 </div>
             @endif
 
+            @if (session('error'))
+                <div class="mb-6 rounded-2xl border border-amber-200 bg-amber-50 px-4 py-3 text-sm font-medium text-amber-800">
+                    {{ session('error') }}
+                </div>
+            @endif
+
             @if ($voucher)
                 <div class="rounded-2xl border border-slate-200 bg-slate-50 p-5 sm:p-6">
                     <div class="space-y-5">
@@ -41,7 +47,7 @@
                                 Network Name
                             </p>
                             <p class="mt-2 text-2xl font-bold text-slate-900">
-                                CIC-WiFi
+                                {{ $voucher->network_name ?? config('wifi.networks.student') }}
                             </p>
                         </div>
 

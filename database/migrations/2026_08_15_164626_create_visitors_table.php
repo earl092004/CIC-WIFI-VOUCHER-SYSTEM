@@ -11,19 +11,19 @@ return new class extends Migration
      */
     public function up(): void
     {
-       Schema::create('visitors', function (Blueprint $table) {
-    $table->id();
+        Schema::create('visitors', function (Blueprint $table) {
+            $table->id();
 
-    $table->string('name');
-    $table->string('purpose');
-    $table->string('visiting_department')->nullable();
-    $table->string('contact_number')->nullable();
-    $table->foreignId('authorized_by')->nullable()->constrained('users')->nullOnDelete();
-    $table->enum('status', ['active', 'expired', 'revoked'])
-        ->default('active');
+            $table->string('name');
+            $table->string('purpose');
+            $table->string('visiting_department')->nullable();
+            $table->string('contact_number')->nullable();
+            $table->foreignId('authorized_by')->nullable()->constrained('users')->nullOnDelete();
+            $table->enum('status', ['active', 'expired', 'revoked'])
+                ->default('active');
 
-    $table->timestamps();
-});
+            $table->timestamps();
+        });
     }
 
     /**

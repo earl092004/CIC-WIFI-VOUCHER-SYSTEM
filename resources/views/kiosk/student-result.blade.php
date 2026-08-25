@@ -13,6 +13,8 @@
     <div class="w-full max-w-lg bg-white rounded-2xl shadow-lg p-8">
 
         <div class="text-center mb-8">
+            <img src="{{ asset('images/cic-logo-cropped.jpg') }}" alt="City of Ilagan College logo" class="mx-auto mb-5 h-24 w-24 rounded-full object-contain">
+            <p class="mb-3 text-sm font-semibold text-cic-navy">City of Ilagan College</p>
             <div class="mx-auto mb-4 flex h-16 w-16 items-center justify-center rounded-full bg-green-100">
                 <span class="text-3xl text-green-600">✓</span>
             </div>

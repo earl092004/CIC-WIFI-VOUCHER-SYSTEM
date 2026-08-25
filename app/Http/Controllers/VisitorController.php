@@ -3,11 +3,11 @@
 namespace App\Http\Controllers;
 
 use App\Models\Visitor;
-use App\Models\WifiAccessLog;
 use App\Models\WifiVoucher;
 use App\Services\VoucherAssignmentService;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
+use Illuminate\Validation\ValidationException;
 use Illuminate\View\View;
 
 class VisitorController extends Controller
@@ -38,7 +38,13 @@ class VisitorController extends Controller
             'status' => 'active',
         ]);
 
-        $result = $voucherAssignmentService->issueForVisitor($visitor, (int) $validated['duration']);
+        try {
+            $result = $voucherAssignmentService->issueForVisitor($visitor, (int) $validated['duration']);
+        } catch (ValidationException $exception) {
+            $visitor->delete();
+
+            throw $exception;
+        }
 
         if ($result === false) {
             return redirect()->route('staff.visitors.create')
@@ -73,5 +79,42 @@ class VisitorController extends Controller
         );
 
         return view('staff.visitors.voucher', compact('voucher'));
+    }
+
+    public function vouchers(Request $request): View
+    {
+        $query = WifiVoucher::query()
+            ->with(['visitor', 'issuedBy'])
+            ->where('voucher_type', 'visitor')
+            ->whereNotNull('visitor_id');
+
+        if ($request->filled('status')) {
+            $query->where('status', $request->string('status')->toString());
+        }
+
+        if ($request->filled('usage_status')) {
+            $query->where('usage_status', $request->string('usage_status')->toString());
+        }
+
+        if ($request->filled('search')) {
+            $search = $request->string('search')->toString();
+            $query->where(function ($voucherQuery) use ($search) {
+                $voucherQuery
+                    ->where('voucher_code', 'like', "%{$search}%")
+                    ->orWhereHas('visitor', fn ($visitorQuery) => $visitorQuery
+                        ->where('name', 'like', "%{$search}%")
+                        ->orWhere('purpose', 'like', "%{$search}%")
+                        ->orWhere('visiting_department', 'like', "%{$search}%"));
+            });
+        }
+
+        return view('staff.visitors.vouchers', [
+            'vouchers' => $query->latest('issued_at')->paginate(30)->withQueryString(),
+            'counts' => [
+                'active' => WifiVoucher::where('voucher_type', 'visitor')->whereNotNull('visitor_id')->where('status', 'active')->count(),
+                'revoked' => WifiVoucher::where('voucher_type', 'visitor')->whereNotNull('visitor_id')->where('status', 'revoked')->count(),
+                'expired' => WifiVoucher::where('voucher_type', 'visitor')->whereNotNull('visitor_id')->where('status', 'expired')->count(),
+            ],
+        ]);
     }
 }

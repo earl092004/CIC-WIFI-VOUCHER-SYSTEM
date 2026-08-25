@@ -31,6 +31,22 @@
 
         <div class="rounded-3xl border border-cic-slate bg-white p-6 shadow-xl shadow-cic-blue/10">
 
+            @if (session('info'))
+                <div class="mb-6 rounded-xl border border-amber-200 bg-amber-50 p-4 text-amber-800">
+                    {{ session('info') }}
+                </div>
+            @endif
+
+            @if ($errors->any())
+                <div class="mb-6 rounded-xl border border-red-200 bg-red-50 p-4 text-red-800">
+                    <p class="font-semibold">Visitor voucher was not issued.</p>
+                    <p class="mt-1">{{ $errors->first() }}</p>
+                    @if (str_contains($errors->first(), 'unused WiFi vouchers'))
+                        <p class="mt-2 text-sm">Import a voucher file using the <strong>Visitor · CIC-Visitors</strong> profile on the staff dashboard first.</p>
+                    @endif
+                </div>
+            @endif
+
             <h2 class="text-2xl font-black text-cic-navy">
                 Create Visitor WiFi Access
             </h2>
@@ -147,4 +163,9 @@
     </main>
 
 </body>
+<script>
+    document.getElementById('voucher-file')?.addEventListener('change', function () {
+        document.getElementById('voucher-file-name').textContent = this.files[0]?.name ?? 'No file selected';
+    });
+</script>
 </html>

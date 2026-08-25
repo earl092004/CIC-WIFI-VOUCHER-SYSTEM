@@ -11,38 +11,38 @@ return new class extends Migration
      */
     public function up(): void
     {
-       Schema::create('wifi_access_logs', function (Blueprint $table) {
-    $table->id();
+        Schema::create('wifi_access_logs', function (Blueprint $table) {
+            $table->id();
 
-    $table->foreignId('student_id')
-        ->nullable()
-        ->constrained('students')
-        ->nullOnDelete();
+            $table->foreignId('student_id')
+                ->nullable()
+                ->constrained('students')
+                ->nullOnDelete();
 
-    $table->foreignId('visitor_id')
-        ->nullable()
-        ->constrained('visitors')
-        ->nullOnDelete();
+            $table->foreignId('visitor_id')
+                ->nullable()
+                ->constrained('visitors')
+                ->nullOnDelete();
 
-    $table->foreignId('voucher_id')
-        ->nullable()
-        ->constrained('wifi_vouchers')
-        ->nullOnDelete();
+            $table->foreignId('voucher_id')
+                ->nullable()
+                ->constrained('wifi_vouchers')
+                ->nullOnDelete();
 
-    $table->foreignId('performed_by')
-        ->nullable()
-        ->constrained('users')
-        ->nullOnDelete();
+            $table->foreignId('performed_by')
+                ->nullable()
+                ->constrained('users')
+                ->nullOnDelete();
 
-    $table->string('action');
+            $table->string('action');
 
-    $table->ipAddress('ip_address')->nullable();
-    $table->string('device_mac')->nullable();
+            $table->ipAddress('ip_address')->nullable();
+            $table->string('device_mac')->nullable();
 
-    $table->text('description')->nullable();
+            $table->text('description')->nullable();
 
-    $table->timestamps();
-});
+            $table->timestamps();
+        });
     }
 
     /**

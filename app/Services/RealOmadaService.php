@@ -3,6 +3,7 @@
 namespace App\Services;
 
 use App\Contracts\OmadaServiceInterface;
+use GuzzleHttp\Cookie\CookieJar;
 use Illuminate\Http\Client\PendingRequest;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Str;
@@ -16,13 +17,13 @@ class RealOmadaService implements OmadaServiceInterface
 
         $response = $client
             ->acceptJson()
-            ->post('/api/v2/sites/' . $siteId . '/voucher', array_merge([
+            ->post('/api/v2/sites/'.$siteId.'/voucher', array_merge([
                 'duration' => $durationMinutes,
                 'count' => 1,
             ], $metadata));
 
         if (! $response->successful()) {
-            throw new \RuntimeException('Omada voucher creation failed: ' . $response->body());
+            throw new \RuntimeException('Omada voucher creation failed: '.$response->body());
         }
 
         $payload = $response->json();
@@ -44,7 +45,7 @@ class RealOmadaService implements OmadaServiceInterface
 
         $response = $client
             ->acceptJson()
-            ->get('/api/v2/sites/' . $siteId . '/voucher', $filters);
+            ->get('/api/v2/sites/'.$siteId.'/voucher', $filters);
 
         if (! $response->successful()) {
             return [];
@@ -62,7 +63,7 @@ class RealOmadaService implements OmadaServiceInterface
 
         $response = $client
             ->acceptJson()
-            ->get('/api/v2/sites/' . $siteId . '/voucher/' . $voucherId);
+            ->get('/api/v2/sites/'.$siteId.'/voucher/'.$voucherId);
 
         if (! $response->successful()) {
             return null;
@@ -96,7 +97,7 @@ class RealOmadaService implements OmadaServiceInterface
             throw new \RuntimeException('Omada login credentials are not configured.');
         }
 
-        $cookieJar = new \GuzzleHttp\Cookie\CookieJar;
+        $cookieJar = new CookieJar;
 
         $loginResponse = Http::withOptions([
             'verify' => false,
@@ -110,14 +111,14 @@ class RealOmadaService implements OmadaServiceInterface
                 'user-id' => 'defaultId',
                 'x-requested-with' => 'XMLHttpRequest',
             ])
-            ->post($baseUrl . '/api/v2/login', [
+            ->post($baseUrl.'/api/v2/login', [
                 'username' => $username,
                 'password' => $password,
                 'terminalUUID' => $terminalUuid,
             ]);
 
         if ($loginResponse->failed()) {
-            throw new \RuntimeException('Omada authentication failed: ' . $loginResponse->body());
+            throw new \RuntimeException('Omada authentication failed: '.$loginResponse->body());
         }
 
         return Http::withOptions([

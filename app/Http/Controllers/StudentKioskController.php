@@ -59,6 +59,8 @@ class StudentKioskController extends Controller
         $student->failed_attempts = 0;
         $student->locked_until = null;
         $student->save();
+        $request->session()->put('kiosk_student_id', $student->id);
+        $request->session()->put('kiosk_last_activity', now()->timestamp);
 
         return view('kiosk.student-result', compact('student'));
     }

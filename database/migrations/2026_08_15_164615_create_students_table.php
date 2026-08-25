@@ -11,18 +11,18 @@ return new class extends Migration
      */
     public function up(): void
     {
-Schema::create('students', function (Blueprint $table) {
-    $table->id();
+        Schema::create('students', function (Blueprint $table) {
+            $table->id();
 
-    $table->string('student_id')->unique();
-    $table->string('first_name');
-    $table->string('last_name');
-    $table->string('course');
-    $table->string('year_level');
-    $table->enum('status', ['active', 'inactive'])->default('active');
+            $table->string('student_id')->unique();
+            $table->string('first_name');
+            $table->string('last_name');
+            $table->string('course');
+            $table->string('year_level');
+            $table->enum('status', ['active', 'inactive'])->default('active');
 
-    $table->timestamps();
-});
+            $table->timestamps();
+        });
     }
 
     /**

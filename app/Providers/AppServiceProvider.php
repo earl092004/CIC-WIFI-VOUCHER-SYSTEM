@@ -9,15 +9,7 @@ class AppServiceProvider extends ServiceProvider
     /**
      * Register any application services.
      */
-    public function register(): void
-    {
-        $this->app->bind(
-            \App\Contracts\OmadaServiceInterface::class,
-            fn () => env('APP_ENV') === 'production'
-                ? new \App\Services\RealOmadaService
-                : new \App\Services\MockOmadaService
-        );
-    }
+    public function register(): void {}
 
     /**
      * Bootstrap any application services.

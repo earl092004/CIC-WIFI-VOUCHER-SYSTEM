@@ -17,10 +17,14 @@ class WifiVoucher extends Model
         'voucher_code',
         'issued_by',
         'voucher_type',
+        'network_name',
         'duration_minutes',
         'status',
+        'usage_status',
         'issued_at',
         'expires_at',
+        'import_batch',
+        'imported_at',
     ];
 
     protected function casts(): array
@@ -28,6 +32,7 @@ class WifiVoucher extends Model
         return [
             'issued_at' => 'datetime',
             'expires_at' => 'datetime',
+            'imported_at' => 'datetime',
         ];
     }
 
