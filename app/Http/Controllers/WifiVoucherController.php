@@ -3,6 +3,8 @@
 namespace App\Http\Controllers;
 
 use App\Models\Student;
+use App\Models\WifiAccessLog;
+use App\Models\WifiVoucher;
 use App\Services\VoucherAssignmentService;
 use Illuminate\Http\Request;
 use Illuminate\Validation\ValidationException;

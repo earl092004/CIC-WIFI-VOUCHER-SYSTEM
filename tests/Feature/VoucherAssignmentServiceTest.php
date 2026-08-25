@@ -29,7 +29,7 @@ it('prevents a student from receiving a second active voucher', function () {
         'expires_at' => now()->addHours(8),
     ]);
 
-    $service = new VoucherAssignmentService;
+    $service = new VoucherAssignmentService();
 
     $result = $service->issueForStudent($student, 480);
 
@@ -55,7 +55,7 @@ it('issues a new voucher when the student has none active', function () {
         'import_batch' => 'test-batch',
         'imported_at' => now(),
     ]);
-    $service = new VoucherAssignmentService;
+    $service = new VoucherAssignmentService();
 
     $result = $service->issueForStudent($student, 480);
 
@@ -86,7 +86,7 @@ it('issues a new voucher for a visitor and allows lookup by active voucher', fun
         'imported_at' => now(),
     ]);
 
-    $service = new VoucherAssignmentService;
+    $service = new VoucherAssignmentService();
 
     $result = $service->issueForVisitor($visitor, 240);
 
@@ -118,7 +118,7 @@ it('renders a polished student voucher display with the network details', functi
     ]);
 
     $response = $this->withSession(['kiosk_student_id' => $student->id])
-        ->get('/kiosk/student/'.$student->id.'/voucher');
+        ->get('/kiosk/student/' . $student->id . '/voucher');
 
     $response->assertOk()
         ->assertSee('WiFi Access Ready')

@@ -82,7 +82,6 @@ class StudentManagementController extends Controller
 
             if ($studentId === '' || $firstName === '' || $lastName === '' || $course === '') {
                 $skipped++;
-
                 continue;
             }
 

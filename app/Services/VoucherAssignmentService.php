@@ -11,8 +11,9 @@ use Illuminate\Validation\ValidationException;
 
 class VoucherAssignmentService
 {
-    public function __construct() {}
-
+    public function __construct()
+    {
+    }
     public function issueForStudent(Student $student, int $durationMinutes = 480): bool|array
     {
         $existingVoucher = $this->getActiveVoucherForStudent($student);
@@ -115,7 +116,7 @@ class VoucherAssignmentService
             'action' => 'voucher_assigned',
             'ip_address' => request()->ip(),
             'performed_by' => auth()->id(),
-            'description' => ucfirst($voucherType).' WiFi voucher assigned from local inventory.',
+            'description' => ucfirst($voucherType) . ' WiFi voucher assigned from local inventory.',
         ];
 
         if ($voucherType === 'student') {

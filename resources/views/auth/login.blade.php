@@ -14,7 +14,9 @@
     <div class="w-full max-w-md rounded-3xl border border-cic-slate bg-white p-8 shadow-xl shadow-cic-blue/10">
 
         <div class="mb-8 text-center">
-            <img src="{{ asset('images/cic-logo-cropped.jpg') }}" alt="City of Ilagan College logo" class="mx-auto mb-5 h-24 w-24 rounded-full object-contain">
+            <div class="mx-auto mb-4 inline-flex h-16 w-16 items-center justify-center rounded-full bg-cic-blue-light text-2xl font-black text-cic-navy">
+                CIC
+            </div>
 
             <h1 class="text-2xl font-black text-cic-navy">
                 City of Ilagan College

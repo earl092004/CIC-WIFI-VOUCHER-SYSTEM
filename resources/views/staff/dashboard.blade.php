@@ -13,12 +13,9 @@
 
     <nav class="bg-cic-navy px-6 py-4 text-white shadow-lg shadow-cic-blue/20">
         <div class="mx-auto flex max-w-6xl items-center justify-between">
-            <div class="flex items-center gap-3">
-                <img src="{{ asset('images/cic-logo-cropped.jpg') }}" alt="City of Ilagan College logo" class="h-14 w-14 rounded-full bg-white object-contain p-0.5">
-                <div>
-                    <h1 class="font-black tracking-wide">CIC Campus WiFi</h1>
-                    <p class="text-sm text-blue-100">Staff Portal</p>
-                </div>
+            <div>
+                <h1 class="font-black tracking-wide">CIC Campus WiFi</h1>
+                <p class="text-sm text-blue-100">Staff Portal</p>
             </div>
 
             <div class="rounded-full border border-white/20 bg-white/5 px-3 py-1 text-sm font-medium">

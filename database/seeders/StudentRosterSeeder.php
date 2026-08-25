@@ -15,7 +15,6 @@ class StudentRosterSeeder extends Seeder
 
         if ($handle === false) {
             $this->command->error('roster.csv could not be opened.');
-
             return;
         }
 
@@ -62,7 +61,7 @@ class StudentRosterSeeder extends Seeder
 
         $this->command->info("Imported {$imported} roster row(s).");
         if ($duplicates !== []) {
-            $this->command->warn('Duplicate student IDs updated: '.implode(', ', array_unique($duplicates)));
+            $this->command->warn('Duplicate student IDs updated: ' . implode(', ', array_unique($duplicates)));
         }
     }
 }

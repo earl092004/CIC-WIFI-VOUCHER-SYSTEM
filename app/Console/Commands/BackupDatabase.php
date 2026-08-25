@@ -7,7 +7,6 @@ use Illuminate\Console\Command;
 class BackupDatabase extends Command
 {
     protected $signature = 'database:backup';
-
     protected $description = 'Create a backup of the configured MySQL database';
 
     public function handle(): int
@@ -17,7 +16,7 @@ class BackupDatabase extends Command
             mkdir($directory, 0755, true);
         }
 
-        $file = $directory.DIRECTORY_SEPARATOR.'cic_wifi_'.now()->format('Ymd_His').'.sql';
+        $file = $directory . DIRECTORY_SEPARATOR . 'cic_wifi_' . now()->format('Ymd_His') . '.sql';
         $mysqldump = env('MYSQLDUMP_PATH', 'C:\\xampp\\mysql\\bin\\mysqldump.exe');
         $command = sprintf('"%s" --host=%s --port=%s --user=%s %s > "%s"', $mysqldump, env('DB_HOST', '127.0.0.1'), env('DB_PORT', '3306'), env('DB_USERNAME', 'root'), env('DB_DATABASE', 'cic_wifi'), $file);
         $exitCode = 0;
@@ -25,12 +24,10 @@ class BackupDatabase extends Command
 
         if ($exitCode !== 0) {
             $this->error('Database backup failed.');
-
             return self::FAILURE;
         }
 
-        $this->info('Backup created: '.basename($file));
-
+        $this->info('Backup created: ' . basename($file));
         return self::SUCCESS;
     }
 }

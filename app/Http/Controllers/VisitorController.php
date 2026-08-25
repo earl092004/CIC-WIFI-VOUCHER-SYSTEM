@@ -7,8 +7,8 @@ use App\Models\WifiVoucher;
 use App\Services\VoucherAssignmentService;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
-use Illuminate\Validation\ValidationException;
 use Illuminate\View\View;
+use Illuminate\Validation\ValidationException;
 
 class VisitorController extends Controller
 {
@@ -117,4 +117,5 @@ class VisitorController extends Controller
             ],
         ]);
     }
+
 }

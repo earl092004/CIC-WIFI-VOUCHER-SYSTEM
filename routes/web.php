@@ -1,11 +1,11 @@
 <?php
 
-use App\Http\Controllers\AnalyticsController;
-use App\Http\Controllers\StaffController;
 use App\Http\Controllers\StudentKioskController;
-use App\Http\Controllers\StudentManagementController;
-use App\Http\Controllers\VisitorController;
 use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\StaffController;
+use App\Http\Controllers\VisitorController;
+use App\Http\Controllers\AnalyticsController;
+use App\Http\Controllers\StudentManagementController;
 use Livewire\Volt\Volt;
 
 /*
@@ -25,6 +25,7 @@ Route::get('/debug-auth', function () {
     ]);
 });
 /** */
+
 
 Route::get('/', function () {
     return view('kiosk.student');
@@ -51,7 +52,12 @@ Route::get('/kiosk/student', [StudentKioskController::class, 'index'])
 Route::post('/kiosk/student/verify', [StudentKioskController::class, 'verify'])
     ->name('kiosk.student.verify');
 
-use App\Http\Controllers\WifiVoucherController;
+
+
+
+
+
+    use App\Http\Controllers\WifiVoucherController;
 
 Route::post(
     '/kiosk/student/{student}/voucher',
@@ -62,6 +68,10 @@ Route::get(
     '/kiosk/student/{student}/voucher',
     [WifiVoucherController::class, 'showStudentVoucher']
 )->name('kiosk.student.voucher');
+
+
+
+
 
 Route::middleware('staff')
     ->prefix('staff')

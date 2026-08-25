@@ -3,10 +3,6 @@
 <head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><title>Review Voucher Import</title>@vite(['resources/css/app.css', 'resources/js/app.js'])</head>
 <body class="min-h-screen bg-slate-100 text-slate-900">
     <main class="mx-auto max-w-4xl p-6">
-        <div class="mb-4 flex items-center gap-3">
-            <img src="{{ asset('images/cic-logo-cropped.jpg') }}" alt="City of Ilagan College logo" class="h-14 w-14 rounded-full bg-white object-contain p-0.5">
-            <span class="font-bold text-cic-navy">City of Ilagan College</span>
-        </div>
         <div class="rounded-2xl border border-slate-200 bg-white p-6 shadow-sm">
             <h1 class="text-2xl font-black text-cic-navy">Review voucher import</h1>
             <p class="mt-2 text-sm text-slate-600">{{ count($codes) }} code(s) found. {{ count($existing) }} duplicate(s) will be skipped.</p>

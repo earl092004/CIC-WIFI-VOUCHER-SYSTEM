@@ -13,7 +13,7 @@ class VoucherImportService
     public function extractCodes(UploadedFile $file): array
     {
         $contents = $file->getClientOriginalExtension() === 'pdf'
-            ? (new Parser)->parseFile($file->getRealPath())->getText()
+            ? (new Parser())->parseFile($file->getRealPath())->getText()
             : file_get_contents($file->getRealPath());
 
         if ($contents === false) {
