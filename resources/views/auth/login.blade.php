@@ -9,16 +9,20 @@
     @vite(['resources/css/app.css', 'resources/js/app.js'])
 </head>
 
-<body class="min-h-screen bg-gray-100 flex items-center justify-center">
+<body class="min-h-screen bg-slate-100 flex items-center justify-center">
 
-    <div class="w-full max-w-md rounded-2xl bg-white p-8 shadow-lg">
+    <div class="w-full max-w-md rounded-3xl border border-cic-slate bg-white p-8 shadow-xl shadow-cic-blue/10">
 
         <div class="mb-8 text-center">
-            <h1 class="text-2xl font-bold text-gray-900">
+            <div class="mx-auto mb-4 inline-flex h-16 w-16 items-center justify-center rounded-full bg-cic-blue-light text-2xl font-black text-cic-navy">
+                CIC
+            </div>
+
+            <h1 class="text-2xl font-black text-cic-navy">
                 City of Ilagan College
             </h1>
 
-            <p class="mt-2 text-gray-600">
+            <p class="mt-2 text-sm font-medium text-slate-600">
                 CIC WiFi Staff Portal
             </p>
         </div>
@@ -70,7 +74,7 @@
 
             <button
                 type="submit"
-                class="mt-6 w-full rounded-lg bg-blue-600 px-4 py-3 font-semibold text-white hover:bg-blue-700"
+                class="mt-6 w-full rounded-xl bg-cic-blue px-4 py-3 font-semibold text-white shadow-lg shadow-cic-blue/20 transition hover:bg-cic-navy"
             >
                 Sign In
             </button>

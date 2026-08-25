@@ -23,8 +23,15 @@
     --color-zinc-900: #171717;
     --color-zinc-950: #0a0a0a;
 
-    --color-accent: var(--color-neutral-800);
-    --color-accent-content: var(--color-neutral-800);
+    --color-cic-navy: #0d3d8f;
+    --color-cic-blue: #0e59b5;
+    --color-cic-blue-light: #eaf3ff;
+    --color-cic-green: #1f9d6a;
+    --color-cic-gold: #f8d76d;
+    --color-cic-slate: #e2e8f0;
+
+    --color-accent: var(--color-cic-navy);
+    --color-accent-content: var(--color-cic-navy);
     --color-accent-foreground: var(--color-white);
 }
 

@@ -5,7 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\Visitor;
 use App\Models\WifiAccessLog;
 use App\Models\WifiVoucher;
-use App\Contracts\OmadaServiceInterface;
+use App\Services\VoucherAssignmentService;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\View\View;
@@ -19,7 +19,7 @@ class VisitorController extends Controller
 
     public function store(
         Request $request,
-        OmadaServiceInterface $omada
+        VoucherAssignmentService $voucherAssignmentService
     ): RedirectResponse {
         $validated = $request->validate([
             'name' => ['required', 'string', 'max:255'],
@@ -29,8 +29,6 @@ class VisitorController extends Controller
             'duration' => ['required', 'integer', 'in:120,240,480'],
         ]);
 
-        // Create the visitor record and record the staff member
-        // who authorized the visitor.
         $visitor = Visitor::create([
             'name' => $validated['name'],
             'purpose' => $validated['purpose'],
@@ -40,33 +38,21 @@ class VisitorController extends Controller
             'status' => 'active',
         ]);
 
-        // Ask Omada service to create a voucher.
-        $voucherData = $omada->createVoucher(
-            (int) $validated['duration']
-        );
+        $result = $voucherAssignmentService->issueForVisitor($visitor, (int) $validated['duration']);
 
-        // Save the voucher.
-        $voucher = WifiVoucher::create([
-            'visitor_id' => $visitor->id,
-            'omada_voucher_id' => $voucherData['omada_voucher_id'],
-            'voucher_code' => $voucherData['voucher_code'],
-            'issued_by' => auth()->id(),
-            'voucher_type' => 'visitor',
-            'duration_minutes' => $voucherData['duration_minutes'],
-            'status' => $voucherData['status'],
-            'issued_at' => $voucherData['issued_at'],
-            'expires_at' => $voucherData['expires_at'],
-        ]);
+        if ($result === false) {
+            return redirect()->route('staff.visitors.create')
+                ->with('info', 'This visitor already has an active WiFi voucher.');
+        }
 
-        // Record the action.
-        WifiAccessLog::create([
-            'visitor_id' => $visitor->id,
-            'voucher_id' => $voucher->id,
-            'performed_by' => auth()->id(),
-            'action' => 'visitor_voucher_generated',
-            'ip_address' => $request->ip(),
-            'description' => 'Visitor WiFi voucher generated and authorized by staff.',
-        ]);
+        $voucher = WifiVoucher::query()
+            ->where('visitor_id', $visitor->id)
+            ->latest()
+            ->first();
+
+        if (! $voucher) {
+            abort(500, 'Visitor voucher was not created.');
+        }
 
         return redirect()->route(
             'staff.visitors.voucher',

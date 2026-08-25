@@ -41,6 +41,9 @@ return [
         'client_id' => env('OMADA_CLIENT_ID'),
         'client_secret' => env('OMADA_CLIENT_SECRET'),
         'site_id' => env('OMADA_SITE_ID'),
+        'username' => env('OMADA_USERNAME'),
+        'password' => env('OMADA_PASSWORD'),
+        'terminal_uuid' => env('OMADA_TERMINAL_UUID'),
     ],
 
 ];

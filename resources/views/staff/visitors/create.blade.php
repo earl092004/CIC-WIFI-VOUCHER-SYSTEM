@@ -9,11 +9,11 @@
     @vite(['resources/css/app.css', 'resources/js/app.js'])
 </head>
 
-<body class="min-h-screen bg-gray-100">
+<body class="min-h-screen bg-slate-100 text-slate-900">
 
-    <nav class="bg-blue-700 px-6 py-4 text-white">
+    <nav class="bg-cic-navy px-6 py-4 text-white shadow-lg shadow-cic-blue/20">
         <div class="mx-auto max-w-6xl">
-            <h1 class="font-bold">CIC Campus WiFi</h1>
+            <h1 class="font-black tracking-wide">CIC Campus WiFi</h1>
             <p class="text-sm text-blue-100">Visitor Authorization</p>
         </div>
     </nav>
@@ -23,19 +23,19 @@
         <div class="mb-6">
             <a
                 href="{{ route('staff.dashboard') }}"
-                class="text-sm text-blue-600 hover:underline"
+                class="text-sm font-medium text-cic-blue hover:text-cic-navy hover:underline"
             >
                 ← Back to Dashboard
             </a>
         </div>
 
-        <div class="rounded-xl bg-white p-6 shadow">
+        <div class="rounded-3xl border border-cic-slate bg-white p-6 shadow-xl shadow-cic-blue/10">
 
-            <h2 class="text-2xl font-bold text-gray-900">
+            <h2 class="text-2xl font-black text-cic-navy">
                 Create Visitor WiFi Access
             </h2>
 
-            <p class="mt-2 text-sm text-gray-600">
+            <p class="mt-2 text-sm text-slate-600">
                 This visitor will receive a temporary CIC WiFi voucher.
             </p>
 
@@ -135,7 +135,7 @@
 
                 <button
                     type="submit"
-                    class="w-full rounded-lg bg-blue-600 px-4 py-3 font-semibold text-white hover:bg-blue-700"
+                    class="w-full rounded-xl bg-cic-blue px-4 py-3 font-semibold text-white shadow-lg shadow-cic-blue/20 transition hover:bg-cic-navy"
                 >
                     Authorize & Issue WiFi Voucher
                 </button>

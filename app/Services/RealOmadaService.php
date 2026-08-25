@@ -3,21 +3,23 @@
 namespace App\Services;
 
 use App\Contracts\OmadaServiceInterface;
+use Illuminate\Http\Client\PendingRequest;
 use Illuminate\Support\Facades\Http;
+use Illuminate\Support\Str;
 
 class RealOmadaService implements OmadaServiceInterface
 {
-    public function createVoucher(int $durationMinutes = 480): array
+    public function createVoucher(int $durationMinutes = 480, array $metadata = []): array
     {
-        [$baseUrl, $omadaId] = $this->resolveOmadaConnection();
-        $token = $this->getAccessToken($baseUrl);
+        [$baseUrl, $siteId] = $this->resolveOmadaConnection();
+        $client = $this->buildAuthenticatedClient($baseUrl);
 
-        $response = Http::withToken($token)
+        $response = $client
             ->acceptJson()
-            ->post('/api/v2/sites/' . $omadaId . '/voucher', [
+            ->post('/api/v2/sites/' . $siteId . '/voucher', array_merge([
                 'duration' => $durationMinutes,
                 'count' => 1,
-            ]);
+            ], $metadata));
 
         if (! $response->successful()) {
             throw new \RuntimeException('Omada voucher creation failed: ' . $response->body());
@@ -35,14 +37,32 @@ class RealOmadaService implements OmadaServiceInterface
         ];
     }
 
+    public function listVouchers(array $filters = []): array
+    {
+        [$baseUrl, $siteId] = $this->resolveOmadaConnection();
+        $client = $this->buildAuthenticatedClient($baseUrl);
+
+        $response = $client
+            ->acceptJson()
+            ->get('/api/v2/sites/' . $siteId . '/voucher', $filters);
+
+        if (! $response->successful()) {
+            return [];
+        }
+
+        $payload = $response->json();
+
+        return is_array($payload) ? $payload : ($payload['data'] ?? []);
+    }
+
     public function getVoucher(string $voucherId): ?array
     {
-        [$baseUrl, $omadaId] = $this->resolveOmadaConnection();
-        $token = $this->getAccessToken($baseUrl);
+        [$baseUrl, $siteId] = $this->resolveOmadaConnection();
+        $client = $this->buildAuthenticatedClient($baseUrl);
 
-        $response = Http::withToken($token)
+        $response = $client
             ->acceptJson()
-            ->get('/api/v2/sites/' . $omadaId . '/voucher/' . $voucherId);
+            ->get('/api/v2/sites/' . $siteId . '/voucher/' . $voucherId);
 
         if (! $response->successful()) {
             return null;
@@ -57,36 +77,60 @@ class RealOmadaService implements OmadaServiceInterface
     protected function resolveOmadaConnection(): array
     {
         $baseUrl = rtrim(config('services.omada.url', env('OMADA_URL', '')), '/');
-        $omadaId = config('services.omada.id', env('OMADA_ID'));
+        $siteId = config('services.omada.site_id', env('OMADA_SITE_ID')) ?? config('services.omada.id', env('OMADA_ID'));
 
-        if (! $baseUrl || ! $omadaId) {
+        if (! $baseUrl || ! $siteId) {
             throw new \RuntimeException('Omada production credentials are not configured.');
         }
 
-        return [$baseUrl, $omadaId];
+        return [$baseUrl, $siteId];
     }
 
-    protected function getAccessToken(string $baseUrl): string
+    protected function buildAuthenticatedClient(string $baseUrl): PendingRequest
     {
-        $clientId = config('services.omada.client_id', env('OMADA_CLIENT_ID'));
-        $clientSecret = config('services.omada.client_secret', env('OMADA_CLIENT_SECRET'));
+        $username = config('services.omada.username', env('OMADA_USERNAME'));
+        $password = config('services.omada.password', env('OMADA_PASSWORD'));
+        $terminalUuid = config('services.omada.terminal_uuid', env('OMADA_TERMINAL_UUID')) ?: Str::uuid()->toString();
 
-        if (! $clientId || ! $clientSecret) {
-            throw new \RuntimeException('Omada client credentials are not configured.');
+        if (! $username || ! $password) {
+            throw new \RuntimeException('Omada login credentials are not configured.');
         }
 
-        $tokenResponse = Http::baseUrl($baseUrl)
-            ->asForm()
-            ->post('/api/v2/authorize', [
-                'client_id' => $clientId,
-                'client_secret' => $clientSecret,
-                'grant_type' => 'client_credentials',
+        $cookieJar = new \GuzzleHttp\Cookie\CookieJar;
+
+        $loginResponse = Http::withOptions([
+            'verify' => false,
+            'cookies' => $cookieJar,
+        ])
+            ->withHeaders([
+                'accept' => 'application/json, text/javascript, */*; q=0.01',
+                'accept-language' => 'en-US,en;q=0.9',
+                'content-type' => 'application/json; charset=UTF-8',
+                'request-hash' => '#dashboardGlobal',
+                'user-id' => 'defaultId',
+                'x-requested-with' => 'XMLHttpRequest',
+            ])
+            ->post($baseUrl . '/api/v2/login', [
+                'username' => $username,
+                'password' => $password,
+                'terminalUUID' => $terminalUuid,
             ]);
 
-        if ($tokenResponse->failed()) {
-            throw new \RuntimeException('Omada authentication failed: ' . $tokenResponse->body());
+        if ($loginResponse->failed()) {
+            throw new \RuntimeException('Omada authentication failed: ' . $loginResponse->body());
         }
 
-        return $tokenResponse->json('access_token');
+        return Http::withOptions([
+            'verify' => false,
+            'cookies' => $cookieJar,
+        ])
+            ->baseUrl($baseUrl)
+            ->withHeaders([
+                'accept' => 'application/json, text/javascript, */*; q=0.01',
+                'accept-language' => 'en-US,en;q=0.9',
+                'request-hash' => '#dashboardGlobal',
+                'user-id' => 'defaultId',
+                'x-requested-with' => 'XMLHttpRequest',
+            ]);
     }
 }
